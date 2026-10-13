@@ -1,0 +1,28 @@
+
+name: Secure Pipeline Secrets
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  secure-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check Secret
+        env:
+          DEMO_SECRET: ${{ secrets.DEMO_SECRET }}
+        run: |
+          if [ -n "$DEMO_SECRET" ]; then
+            echo "Secret loaded successfully"
+          else
+            echo "Secret is missing"
+            exit 1
+          fi
+
+      - name: Run Application
+        run: echo "Pipeline executed successfully"
